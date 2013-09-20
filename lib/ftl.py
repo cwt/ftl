@@ -8,6 +8,6 @@ def digest(filename, method='sha256'):
             'Supported methods: md5, sha1, sha224, sha256, sha384, sha512'
         )
     h = getattr(hashlib, method)
-    f = open(filename, 'r+b')
-    m = mmap(f.fileno(), 0)
-    return h(m).hexdigest()
+    with open(filename, 'r+b') as f:
+        m = mmap(f.fileno(), 0)
+        return h(m).hexdigest()
