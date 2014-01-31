@@ -2,7 +2,7 @@
 import hashlib
 from mmap import mmap
 
-class Digest(object):
+class FileDigest(object):
     def __init__(self, filename, method='sha256'):
         if method not in ('sha224', 'sha256', 'sha384', 'sha512'):
             raise ValueError(
@@ -13,7 +13,7 @@ class Digest(object):
         with open(filename, 'r+b') as f:
             self.file = mmap(f.fileno(), 0)
 
-    def ichunks(self, size=4096):
+    def chunks(self, size=4096):
         h = self.hash_method
         self.final_hash = self.hash_method()
         while self.file.tell() < self.file.size():
@@ -23,6 +23,5 @@ class Digest(object):
 
     def hexdigest(self, size=4096):
         if self.final_hash is None:
-            all(self.ichunks(size))
+            all(self.chunks(size))
         return self.final_hash.hexdigest()
-
